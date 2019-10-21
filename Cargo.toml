@@ -1,0 +1,16 @@
+[package]
+name = "simobs"
+version = "0.1.0"
+authors = ["Gu Junhua <jhgu@nao.cas.cn>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+
+[dependencies.astroalgo]
+git='https://github.com/astrojhgu/astroalgo.git'
+
+[dependencies.scorus]
+git='https://github.com/astrojhgu/scorus.git'
