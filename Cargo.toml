@@ -7,7 +7,14 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = '2.33.0'
+ndarray = "0.13.0"
+num-traits= "0.2.8"
+linear_solver={path='../linear_solver'}
+sprs = "0.6.5"
 
+[dependencies.fitsimg]
+git = 'https://github.com/astrojhgu/rust_fitsimg.git'
 
 [dependencies.astroalgo]
 git='https://github.com/astrojhgu/astroalgo.git'
