@@ -4,7 +4,7 @@ use scorus::coordinates::Vec2d;
 use scorus::coordinates::sphcoord::SphCoord;
 use scorus::healpix::interp::natural_interp_ring;
 use scorus::healpix::utils::npix2nside;
-use simobs::{dump_healpix_map, load_healpix_data_gal, project_ptr};
+use simobs::scan::{dump_healpix_map, load_healpix_data_gal, project_ptr};
 use simobs::gridder::Gridder;
 use clap::{App, Arg};
 use ndarray::Array2;
