@@ -12,6 +12,10 @@ ndarray = "0.13.0"
 num-traits= "0.2.8"
 linear_solver={path='../linear_solver'}
 sprs = "0.6.5"
+chfft = "0.3.2"
+rand = "0.7.2"
+rand_distr = "0.2.2"
+num-complex = "0.2.3"
 
 [dependencies.fitsimg]
 git = 'https://github.com/astrojhgu/rust_fitsimg.git'

@@ -10,6 +10,7 @@ use clap::{App, Arg};
 use ndarray::Array2;
 use linear_solver::io::RawMM;
 use num_traits::float::FloatConst;
+use simobs::noise::ColoredNoise;
 fn main() {
     let data=load_healpix_data_gal("../allsky_408.fits", 128);
     let ptr=RawMM::<f64>::from_file("ptr.mtx").to_array2();
@@ -26,10 +27,27 @@ fn main() {
     }
     ).collect();
 
-    let nside=npix2nside(data.len());
-    let tod:ndarray::Array1<_>=sph_list.iter().map(|&ptr|natural_interp_ring(nside, &data, ptr)).collect();
+    let mut cn=ColoredNoise::new(-1.0, 65536, 1.0);
 
-    RawMM::<f64>::from_array1(tod.view()).to_file("tod.mtx");
+    let nside=npix2nside(data.len());
+    let tod:ndarray::Array1<_>=sph_list.iter().map(|&ptr|{
+        natural_interp_ring(nside, &data, ptr)
+        }).collect();
+
+    RawMM::<f64>::from_array1(tod.view()).to_file("tod_pure.mtx");
+
+    let noise:ndarray::Array1<_>=sph_list.iter().map(|_|{
+        cn.get()
+    }).collect();
+
+    RawMM::<f64>::from_array1(noise.view()).to_file("noise.mtx");
+    let noise_cov:ndarray::Array1<_>=cn.truncated_autocorr(tod.len()).iter().cloned().collect();
+
+    RawMM::<f64>::from_array1(noise_cov.view()).to_file("noise_cov.mtx");
+
+    let tod_with_noise=&tod+&noise;
+
+    RawMM::from_array1(tod_with_noise.view()).to_file("tod_with_noise.mtx");
 
 
     dump_healpix_map(&data, "a.fits", 1024);
