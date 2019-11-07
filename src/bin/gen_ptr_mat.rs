@@ -3,6 +3,7 @@ use linear_solver::io::RawMM;
 use num_traits::float::FloatConst;
 use scorus::coordinates::sphcoord::SphCoord;
 use simobs::gridder::Gridder;
+use simobs::utils::auto_fov_center;
 fn main() {
     let matches = App::new("generate ptr mat")
         .arg(
@@ -18,7 +19,7 @@ fn main() {
             Arg::with_name("center")
                 .short("c")
                 .long("center")
-                .required(true)
+                .required(false)
                 .takes_value(true)
                 .number_of_values(2)
                 .value_delimiter(",")
@@ -70,24 +71,31 @@ fn main() {
 
     //println!("point({}, {}) # point=x color=red", center[0].0, center[0].1);
 
-    let fov_center_ra = matches
-        .values_of("center")
-        .unwrap()
-        .nth(0)
-        .unwrap()
-        .parse::<f64>()
-        .unwrap()
-        .to_radians();
-    let fov_center_dec = matches
-        .values_of("center")
-        .unwrap()
-        .nth(1)
-        .unwrap()
-        .parse::<f64>()
-        .unwrap()
-        .to_radians();
+    let fov_center = if matches.is_present("fov center") {
+        let fov_center_ra = matches
+            .values_of("fov center")
+            .unwrap()
+            .nth(0)
+            .unwrap()
+            .parse::<f64>()
+            .unwrap()
+            .to_radians();
+        let fov_center_dec = matches
+            .values_of("fov center")
+            .unwrap()
+            .nth(1)
+            .unwrap()
+            .parse::<f64>()
+            .unwrap()
+            .to_radians();
 
-    let fov_center = SphCoord::new(f64::PI() / 2.0 - fov_center_dec, fov_center_ra);
+        SphCoord::new(f64::PI() / 2.0 - fov_center_dec, fov_center_ra)
+    } else {
+        let (fov_center_ra, fov_center_dec) =
+            auto_fov_center(ra.as_slice().unwrap(), dec.as_slice().unwrap());
+        SphCoord::new(f64::PI() / 2.0 - fov_center_dec, fov_center_ra)
+    };
+    
     let step = matches
         .value_of("pixel size")
         .unwrap()
