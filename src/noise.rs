@@ -84,10 +84,18 @@ impl ColoredNoise {
         let mut result = vec![0.0; length];
         //for i in 0..length/2{
         for (i, r) in result.iter_mut().enumerate().take(length / 2) {
-            *r = self.autocorr[i];
+            if i<self.autocorr.len(){
+                *r = self.autocorr[i];
+            }else{
+                *r = 0.0;
+            }
         }
         for (i, r) in result.iter_mut().enumerate().take(length).skip(length / 2) {
-            *r = self.autocorr[self.autocorr.len() - length + i];
+            if self.autocorr.len() - length +i < self.autocorr.len(){
+                *r = self.autocorr[self.autocorr.len() - length + i];
+            }else{
+                *r = 0.0;
+            }
         }
         result
     }
