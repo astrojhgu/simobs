@@ -1,27 +1,27 @@
-[package]
-name = "simobs"
-version = "0.1.0"
-authors = ["Gu Junhua <jhgu@nao.cas.cn>"]
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+chfft = '0.3.2'
 clap = '2.33.0'
-ndarray = "0.13.0"
-num-traits= "0.2.8"
-linear_solver={path='../linear_solver'}
-sprs = "0.6.5"
-chfft = "0.3.2"
-rand = "0.7.2"
-rand_distr = "0.2.2"
-num-complex = "0.2.3"
+ndarray = '0.13.0'
+num-complex = '0.2.3'
+num-traits = '0.2.9'
+rand = '0.7.2'
+rand_distr = '0.2.2'
+sprs = '0.7.1'
+
+[dependencies.astroalgo]
+git = 'https://github.com/astrojhgu/astroalgo.git'
 
 [dependencies.fitsimg]
 git = 'https://github.com/astrojhgu/rust_fitsimg.git'
 
-[dependencies.astroalgo]
-git='https://github.com/astrojhgu/astroalgo.git'
+[dependencies.linear_solver]
+path = '../linear_solver'
 
 [dependencies.scorus]
-git='https://github.com/astrojhgu/scorus.git'
+git = 'https://github.com/astrojhgu/scorus.git'
+
+[package]
+authors = ['Gu Junhua <jhgu@nao.cas.cn>']
+edition = '2018'
+name = 'simobs'
+version = '0.1.0'
