@@ -101,4 +101,38 @@ impl Gridder {
             pixel_indices,
         )
     }
+
+    pub fn get_ptr_matrix_mo(
+        &self,
+        points: &[&[sphcoord::SphCoord<f64>]],
+    ) -> (Vec<CsMat<f64>>, Array2<isize>) {
+        let mut pix_map = BTreeMap::<(isize, isize), usize>::new();
+        let mut ptr_idx = vec![vec![0]; points.len()];
+        let mut indices = vec![vec![]; points.len()];
+        let mut values = vec![vec![]; points.len()];
+        for (i, points1) in points.iter().enumerate(){
+            for &point in points1.iter() {
+                let pix = self.grid_index(point);
+                let n = query_pixel(&mut pix_map, pix);
+                let m = *ptr_idx[i].last().unwrap() + 1;
+                ptr_idx[i].push(m);
+                indices[i].push(n);
+                values[i].push(1.0_f64);
+            }
+        }
+        //let mut pixel_indices=vec![(0,0); pix_map.len()];
+        let mut pixel_indices = Array2::zeros((pix_map.len(), 2));
+        for (&k, &v) in pix_map.iter() {
+            //pixel_indices[v]=k;
+            pixel_indices[(v, 0)] = k.0;
+            pixel_indices[(v, 1)] = k.1;
+        }
+        (
+            points.iter().zip(ptr_idx.into_iter().zip(indices.into_iter().zip(values.into_iter()))).map(|(i, (pi, (idx, v)))|{
+                CsMat::new((i.len(), pix_map.len()), pi, idx, v)    
+            }).collect()
+            ,
+            pixel_indices,
+        )
+    }
 }
